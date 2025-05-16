@@ -3,3 +3,8 @@
 
 # PyCharm/IntelliJ IDEA
 .idea/ 
+
+# gitignore
+.gitignore
+
+main.py
