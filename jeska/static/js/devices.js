@@ -41,4 +41,23 @@ $(document).ready(function() {
         // Initial sort by name column
         order: [[0, 'asc']]
     });
+
+    // Delete device modal handling
+    let deleteForm = null;
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteDeviceModal'));
+
+    // When delete button is clicked, store the form and show modal
+    $('.delete-device-btn').on('click', function(e) {
+        e.preventDefault();
+        deleteForm = $(this).closest('form');
+        deleteModal.show();
+    });
+
+    // When confirm delete is clicked in modal
+    $('#confirmDeleteDeviceBtn').on('click', function() {
+        if (deleteForm) {
+            deleteForm.submit();
+        }
+        deleteModal.hide();
+    });
 });
