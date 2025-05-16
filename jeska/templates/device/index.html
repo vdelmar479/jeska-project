@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block additional_scripts %}
+    <script src="{{ url_for('static', filename='js/devices.js') }}"></script>
+{% endblock %}
+
+{% block header %}
+  <h1>{% block title %}Devices{% endblock %}</h1>
+  {% if g.user %}
+    <div class="d-flex gap-2">
+      <a class="action btn btn-primary" href="{{ url_for('device.create') }}">New Device</a>
+      <a class="action btn btn-secondary" href="{{ url_for('device.import_export') }}">Import/Export</a>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Description</th>
+          <th>Location</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for device in devices %}
+          <tr>
+            <td>{{ device['name'] }}</td>
+            <td>
+              <span class="badge {% if device['status'] == 'Active' %}bg-success{% elif device['status'] == 'Maintenance' %}bg-warning{% else %}bg-danger{% endif %}">
+                {{ device['status'] }}
+              </span>
+            </td>
+            <td>{{ device['description'] or 'N/A' }}</td>
+            <td>{{ device['location'] }}</td>
+            <td>
+              {% if g.user %}
+                <a href="{{ url_for('report.create', device_name=device['name']) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-title="Add report"><i class="bi bi-file-earmark-plus-fill"></i></a>
+                <a href="{{ url_for('device.update', id=device['id']) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-title="Edit device"><i class="bi bi-pencil-fill"></i></a>
+                <form action="{{ url_for('device.delete', id=device['id']) }}" method="post" style="display: inline;">
+                  <button type="submit" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-title="Delete" onclick="return confirm('Are you sure you want to delete this device?');"><i class="bi bi-trash3-fill"></i></button>
+                </form>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %} 

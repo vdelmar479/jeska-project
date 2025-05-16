@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block additional_scripts %}
+    <script src="{{ url_for('static', filename='js/reports.js') }}"></script>
+{% endblock %}
+
+{% block header %}
+  <h1>{% block title %}Edit Report{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <form method="post" action="">
+              <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input name="title" id="title" class="form-control" value="{{ request.form['title'] or report['title'] }}" required>
+              </div>
+              <div class="mb-3">
+                <label for="device_name" class="form-label">Device</label>
+                <select name="device_name" id="device_name" class="form-select" disabled>
+                  <option value="">Select a device</option>
+                  {% for device in devices %}
+                    <option value="{{ device['name'] }}" {% if device['name'] == report['device_name'] %}selected{% endif %}>
+                      {{ device['name'] }}
+                    </option>
+                  {% endfor %}
+                </select>
+                <input type="hidden" name="device_name" value="{{ report['device_name'] }}">
+              </div>
+              <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select name="status" id="status" class="form-select" required>
+                  <option value="Open" {% if report['status'] == 'Open' %}selected{% endif %}>Open</option>
+                  <option value="In Progress" {% if report['status'] == 'In Progress' %}selected{% endif %}>In Progress</option>
+                  <option value="Closed" {% if report['status'] == 'Closed' %}selected{% endif %}>Closed</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="body" class="form-label">Report Details</label>
+                <textarea name="body" id="body" class="form-control" rows="10">{{ request.form['body'] or report['body'] }}</textarea>
+              </div>
+              <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary w-50">Save</button>
+                <form action="{{ url_for('report.delete', id=report['id']) }}" method="post" class="w-50">
+                  <button type="submit" class="btn btn-danger w-50" onclick="return confirm('Are you sure?');">Delete</button>
+                </form>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %} 

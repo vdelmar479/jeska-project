@@ -1,0 +1,57 @@
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS reports;
+DROP TABLE IF EXISTS devices;
+DROP TABLE IF EXISTS peripherals;
+DROP TABLE IF EXISTS components;
+
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username VARCHAR NOT NULL UNIQUE,
+  password VARCHAR NOT NULL,
+  name VARCHAR,
+  surname VARCHAR,
+  email VARCHAR,
+  role VARCHAR,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE devices (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name VARCHAR NOT NULL UNIQUE,
+  description TEXT,
+  status VARCHAR,
+  components VARCHAR,
+  peripherals VARCHAR,
+  location VARCHAR,
+  buying_timestamp TIMESTAMP
+);
+
+CREATE TABLE peripherals (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name VARCHAR NOT NULL UNIQUE,
+  type VARCHAR,
+  description TEXT,
+  in_use INTEGER DEFAULT 0,
+  total INTEGER DEFAULT 0
+);
+
+CREATE TABLE components (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name VARCHAR NOT NULL UNIQUE,
+  type VARCHAR,
+  description TEXT,
+  in_use INTEGER DEFAULT 0,
+  total INTEGER DEFAULT 0
+);
+
+CREATE TABLE reports (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title VARCHAR NOT NULL,
+  body TEXT,
+  author_username VARCHAR NOT NULL,
+  device_name VARCHAR NOT NULL,
+  status VARCHAR,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (author_username) REFERENCES users(username),
+  FOREIGN KEY (device_name) REFERENCES devices(name)
+);

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Profile{% endblock %}</h1>
+  <div class="profile-actions">
+    <a class="action" href="{{ url_for('auth.update_profile') }}">Edit Profile</a>
+    <a class="action" href="{{ url_for('auth.change_password') }}">Change Password</a>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="profile-container">
+    <div class="profile-info">
+      <h2>User Information</h2>
+      <div class="info-group">
+        <label>Username:</label>
+        <span>{{ g.user['username'] }}</span>
+      </div>
+      <div class="info-group">
+        <label>Name:</label>
+        <span>{{ g.user['name'] or 'Not provided' }}</span>
+      </div>
+      <div class="info-group">
+        <label>Surname:</label>
+        <span>{{ g.user['surname'] or 'Not provided' }}</span>
+      </div>
+      <div class="info-group">
+        <label>Email:</label>
+        <span>{{ g.user['email'] or 'Not provided' }}</span>
+      </div>
+      <div class="info-group">
+        <label>Role:</label>
+        <span>{{ g.user['role'] }}</span>
+      </div>
+    </div>
+  </div>
+{% endblock %} 

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block additional_scripts %}
+    <script src="{{ url_for('static', filename='js/reports.js') }}"></script>
+{% endblock %}
+
+{% block header %}
+  <h1>{% block title %}View Report{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <form method="post" action="">
+              <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input name="title" id="title" class="form-control" value="{{ report['title'] }}" readonly>
+              </div>
+              <div class="mb-3">
+                <label for="device_name" class="form-label">Device</label>
+                <input name="device_name" id="device_name" class="form-control" value="{{ report['device_name'] }}" readonly>
+              </div>
+              <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <input name="status" id="status" class="form-control" value="{{ report['status'] }}" readonly>
+              </div>
+              <div class="mb-3">
+                <label for="body" class="form-label">Report Details</label>
+                <textarea name="body" id="body" class="form-control" rows="10" readonly>{{ report['body'] }}</textarea>
+              </div>
+              <div class="mb-3">
+                <label for="author" class="form-label">Author</label>
+                <input name="author" id="author" class="form-control" value="{{ report['author_username'] }}" readonly>
+              </div>
+              <div class="mb-3">
+                <label for="created_at" class="form-label">Created At</label>
+                <input name="created_at" id="created_at" class="form-control" value="{{ report['created_at'].strftime('%Y-%m-%d %H:%M') }}" readonly>
+              </div>
+              <div class="d-flex gap-2 mt-4 {% if not is_admin and g.user['username'] != report['author_username'] %}justify-content-center{% endif %}">
+                <a href="{{ url_for('report.index') }}" class="btn btn-primary w-50">Back to Reports</a>
+                {% if is_admin or g.user['username'] == report['author_username'] %}
+                  <a href="{{ url_for('report.update', id=report['id']) }}" class="btn btn-primary w-50">Edit Report</a>
+                {% endif %}
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %} 

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Edit "{{ device['name'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <form method="post">
+              <div class="mb-3">
+                <label for="name" class="form-label">Device Name</label>
+                <input name="name" id="name" class="form-control" value="{{ request.form['name'] or device['name'] }}" required>
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea name="description" id="description" class="form-control">{{ request.form['description'] or device['description'] }}</textarea>
+              </div>
+              <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select name="status" id="status" class="form-select" required>
+                  <option value="Available" {% if (request.form['status'] or device['status']) == 'Available' %}selected{% endif %}>Available</option>
+                  <option value="In Use" {% if (request.form['status'] or device['status']) == 'In Use' %}selected{% endif %}>In Use</option>
+                  <option value="Maintenance" {% if (request.form['status'] or device['status']) == 'Maintenance' %}selected{% endif %}>Maintenance</option>
+                  <option value="Retired" {% if (request.form['status'] or device['status']) == 'Retired' %}selected{% endif %}>Retired</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="components" class="form-label">Components</label>
+                <textarea name="components" id="components" class="form-control">{{ request.form['components'] or device['components'] }}</textarea>
+              </div>
+              <div class="mb-3">
+                <label for="peripherals" class="form-label">Peripherals</label>
+                <textarea name="peripherals" id="peripherals" class="form-control">{{ request.form['peripherals'] or device['peripherals'] }}</textarea>
+              </div>
+              <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input name="location" id="location" class="form-control" value="{{ request.form['location'] or device['location'] }}" required>
+              </div>
+              <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary w-50">Save</button>
+                <form action="{{ url_for('device.delete', id=device['id']) }}" method="post" class="w-50">
+                  <button type="submit" class="btn btn-danger w-50" onclick="return confirm('Are you sure?');">Delete</button>
+                </form>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %} 
