@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jeska - Login</title>
+  <!--  Favicon  -->
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/jeska-favicon.png') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.12.1/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+  <div class="login-split">
+    <div class="login-left">
+      <div class="login-logo">
+        <img src="{{ url_for('static', filename='img/logo_Login.png') }}" alt="Jeska Logo">
+        <span>JESKA</span>
+      </div>
+      <div class="login-title">
+        Manage your inventory and<br>any possible incidents
+      </div>
+      <div class="login-desc">
+        Jeska is a web application designed to help manage any "fires" in your system with a clear view of the problems to solve them more efficiently.
+      </div>
+    </div>
+    <div class="login-right">
+      <div class="login-form-box">
+        <h2>Sign Up</h2>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="alert alert-danger">
+              {% for message in messages %}
+                {{ message }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        <form class="login-form" method="post">
+          <label for="username">Username</label>
+          <input type="text" name="username" id="username" required>
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password" required>
+          <button type="submit" class="btn-primary">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

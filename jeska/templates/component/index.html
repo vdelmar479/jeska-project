@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block additional_scripts %}
+<script src="{{ url_for('static', filename='js/component.js') }}"></script>
+{% endblock %}
+
+{% block title %}Components{% endblock %}
+
+{% block header %}
+<h1>Components</h1>
+{% if g.user.role == 'admin' %}
+<button id="newComponentBtn" class="btn btn-primary mb-3">New Component</button>
+<button id="consolidateComponentBtn" class="btn btn-primary mb-3">Consolidate components</button>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Active</th>
+                <th>Total</th>
+                <th>Available</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for component in components %}
+            <tr>
+                <td class="align-middle">{{ component.name }}</td>
+                <td class="align-middle">{{ component.type }}</td>
+                <td class="align-middle">{{ component.in_use }}</td>
+                <td class="align-middle">{{ component.total }}</td>
+                <td class="align-middle">{{ component.total - component.in_use }}</td>
+                <td class="align-middle">
+                    <button type="button" class="btn btn-sm btn-primary view-component-btn" data-bs-toggle="tooltip" data-bs-title="View details"
+                            data-component-id="{{ component.id }}"
+                            data-component-name="{{ component.name }}">
+                        <i class="bi bi-eye-fill"></i>
+                    </button>
+                    {% if g.user.role == 'admin' %}
+                    <button type="button" class="btn btn-sm btn-primary edit-component-btn" data-bs-toggle="tooltip" data-bs-title="Edit component"
+                            data-component-id="{{ component.id }}"
+                            data-component-name="{{ component.name }}"
+                            data-component-type="{{ component.type }}"
+                            data-component-description="{{ component.description }}"
+                            data-component-total="{{ component.total }}">
+                        <i class="bi bi-pencil-fill"></i>
+                    </button>
+                    <form action="{{ url_for('component.delete', id=component.id) }}" method="post" style="display: inline;" id="deleteForm{{ component.id }}">
+                        <button type="button" class="btn btn-sm btn-primary delete-component-btn" data-bs-toggle="tooltip" data-bs-title="Delete"
+                                data-component-id="{{ component.id }}">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Create Component Modal -->
+<div class="modal fade" id="createComponentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Component</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createComponentForm">
+                    <div class="mb-3">
+                        <label for="createComponentName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="createComponentName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="createComponentType" class="form-label">Type</label>
+                        <select class="form-select" id="createComponentType" required>
+                            <option value="">Select a type</option>
+                            {% for type in config.COMPONENT_TYPES %}
+                            <option value="{{ type }}">{{ type }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="createComponentDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="createComponentDescription" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="createComponentTotal" class="form-label">Total Quantity</label>
+                        <input type="number" class="form-control" id="createComponentTotal" min="0" value="0" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveNewComponentBtn">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Component Modal -->
+<div class="modal fade" id="editComponentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Component</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editComponentForm">
+                    <input type="hidden" id="editComponentId">
+                    <div class="mb-3">
+                        <label for="editComponentName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="editComponentName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editComponentType" class="form-label">Type</label>
+                        <select class="form-select" id="editComponentType" required>
+                            <option value="">Select a type</option>
+                            {% for type in config.COMPONENT_TYPES %}
+                            <option value="{{ type }}">{{ type }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editComponentDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="editComponentDescription" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editComponentTotal" class="form-label">Total Quantity</label>
+                        <input type="number" class="form-control" id="editComponentTotal" min="0" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveComponentBtn">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Component Modal -->
+<div class="modal fade" id="deleteComponentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Component</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this component? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteComponentBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Component Modal -->
+<div class="modal fade" id="viewComponentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Component Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <strong>Name:</strong>
+                    <p id="componentName"></p>
+                </div>
+                <div class="mb-3">
+                    <strong>Type:</strong>
+                    <p id="componentType"></p>
+                </div>
+                <div class="mb-3">
+                    <strong>Description:</strong>
+                    <p id="componentDescription"></p>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>In Use:</strong>
+                        <p id="componentInUse"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Total:</strong>
+                        <p id="componentTotal"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Available:</strong>
+                        <p id="componentAvailable"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

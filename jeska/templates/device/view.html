@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Device Details{% endblock %}
+
+{% block header %}
+<h1>Device Details</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="mb-0">{{ device.name }}</h3>
+    </div>
+    <div class="card-body">
+      <div class="mb-3">
+        <strong>Status:</strong>
+        <span class="badge {% if device.status == 'Active' %}bg-success{% elif device.status == 'Maintenance' %}bg-warning{% else %}bg-danger{% endif %}">{{ device.status }}</span>
+      </div>
+      <div class="mb-3">
+        <strong>Location:</strong> {{ device.location or 'N/A' }}
+      </div>
+      <div class="mb-3">
+        <strong>Description:</strong>
+        <p class="mt-2">{{ device.description or 'N/A' }}</p>
+      </div>
+      <div class="mb-3">
+        <strong>Components:</strong>
+        <ul class="mt-2">
+          {% for comp in (device.components.split(',') if device.components else []) %}
+            <li>{{ comp }}</li>
+          {% else %}
+            <li>No components listed</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="mb-3">
+        <strong>Peripherals:</strong>
+        <ul class="mt-2">
+          {% for periph in (device.peripherals.split(',') if device.peripherals else []) %}
+            <li>{{ periph }}</li>
+          {% else %}
+            <li>No peripherals listed</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="mb-3">
+        <strong>Reports:</strong>
+        <div class="mt-2">
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 20%">Title</th>
+                <th style="width: 30%">Description</th>
+                <th style="width: 15%">Status</th>
+                <th style="width: 20%">Date</th>
+                <th style="width: 15%">User</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for report in reports %}
+                <tr>
+                  <td class="align-middle">{{ report.title }}</td>
+                  <td class="align-middle">{{ report.body[:100] ~ ('...' if report.body and report.body|length > 100 else '') }}</td>
+                  <td class="align-middle">
+                    <span class="badge {% if report.status == 'Open' %}bg-danger{% elif report.status == 'In Progress' %}bg-warning{% else %}bg-success{% endif %}">
+                      {{ report.status }}
+                    </span>
+                  </td>
+                  <td class="align-middle">{{ report.created_at.strftime('%d/%m/%Y, %H:%M') if report.created_at else '' }}</td>
+                  <td class="align-middle">{{ report.author_username }}</td>
+                </tr>
+              {% else %}
+                <tr><td colspan="5" class="text-center">No reports</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

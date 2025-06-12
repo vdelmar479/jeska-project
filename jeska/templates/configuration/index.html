@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block additional_scripts %}
+<script src="{{ url_for('static', filename='js/configurations.js') }}"></script>
+{% endblock %}
+
+{% block title %}Configuration{% endblock %}
+
+{% block header %}
+<h1>Configuration</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Locations</h5>
+                </div>
+                <div class="card-body">
+                    <form id="locationsForm">
+                        <div id="locationsList">
+                            {% for location in config.LOCATIONS %}
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control" value="{{ location }}" name="locations[]">
+                                <button type="button" class="btn btn-danger remove-item">Remove</button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="addLocation">Add Location</button>
+                        <button type="submit" class="btn btn-primary">Save Locations</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Device Statuses</h5>
+                </div>
+                <div class="card-body">
+                    <form id="deviceStatusesForm">
+                        <div id="deviceStatusesList">
+                            {% for status in config.DEVICE_STATUSES %}
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control" value="{{ status }}" name="deviceStatuses[]">
+                                <button type="button" class="btn btn-danger remove-item">Remove</button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="addDeviceStatus">Add Status</button>
+                        <button type="submit" class="btn btn-primary">Save Device Statuses</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Report Statuses</h5>
+                </div>
+                <div class="card-body">
+                    <form id="reportStatusesForm">
+                        <div id="reportStatusesList">
+                            {% for status in config.REPORT_STATUSES %}
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control" value="{{ status }}" name="reportStatuses[]">
+                                <button type="button" class="btn btn-danger remove-item">Remove</button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="addReportStatus">Add Status</button>
+                        <button type="submit" class="btn btn-primary">Save Report Statuses</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Component Types</h5>
+                </div>
+                <div class="card-body">
+                    <form id="componentTypesForm">
+                        <div id="componentTypesList">
+                            {% for type in config.COMPONENT_TYPES %}
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control" value="{{ type }}" name="componentTypes[]">
+                                <button type="button" class="btn btn-danger remove-item">Remove</button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="addComponentType">Add Type</button>
+                        <button type="submit" class="btn btn-primary">Save Component Types</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Peripheral Types</h5>
+                </div>
+                <div class="card-body">
+                    <form id="peripheralTypesForm">
+                        <div id="peripheralTypesList">
+                            {% for type in config.PERIPHERAL_TYPES %}
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control" value="{{ type }}" name="peripheralTypes[]">
+                                <button type="button" class="btn btn-danger remove-item">Remove</button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button type="button" class="btn btn-secondary" id="addPeripheralType">Add Type</button>
+                        <button type="submit" class="btn btn-primary">Save Peripheral Types</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
